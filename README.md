@@ -1,15 +1,19 @@
 
 # Shopify Wishlist App
 
-A minimal embedded Shopify app that adds a "Save for Later / Wishlist" feature to a storefront. Built with React and designed to integrate with Shopify using the Remix template.
+A feature-rich embedded Shopify app that adds a "Save for Later / Wishlist" feature to a storefront. Built with React and designed to integrate with Shopify using the Remix template.
 
 ## Features
 
-- Browse and view products
-- Save products to a wishlist for later
+- Browse and view products with high-quality images
+- Save products to a wishlist for later purchase
+- Add products to cart with visual feedback
 - View all saved products in the wishlist page
 - Remove products from the wishlist
-- Move products from wishlist to cart
+- Move products directly from wishlist to cart
+- Persistent storage using session cookies
+- Visual indicators for wishlist and cart status
+- Responsive design for mobile and desktop
 
 ## Setup Steps
 
@@ -33,25 +37,33 @@ A minimal embedded Shopify app that adds a "Save for Later / Wishlist" feature t
 
 ## How Wishlist Persistence Works
 
-This app uses session cookies to persist the wishlist state across routes. When a user adds a product to their wishlist:
+This app uses session cookies to persist both the wishlist and cart state across routes and browser sessions:
 
-1. The product ID is stored in a cookie named "wishlist"
-2. This cookie is set with a 7-day expiration (max-age=604800)
-3. The cookie is read on initial page load to restore the wishlist state
-4. When products are removed from the wishlist, the cookie is updated accordingly
+1. Product IDs are stored in cookies named "wishlist" and "cart"
+2. These cookies are set with a 7-day expiration (max-age=604800)
+3. When the app loads, it reads these cookies to restore the wishlist and cart state
+4. When products are added or removed, the cookies are updated automatically
+5. The implementation uses `document.cookie` with proper encoding/decoding
 
-This approach ensures that users' wishlists persist even if they close their browser and return later, providing a seamless shopping experience.
+This approach ensures that users' selections persist even if they close their browser and return later, providing a seamless shopping experience without requiring user accounts.
+
+## Implementation Details
+
+- **React Context API**: Manages global state for products, wishlist, and cart
+- **Cookie-based persistence**: Maintains state between sessions
+- **Responsive UI**: Built with Tailwind CSS for adaptability across devices
+- **Component Architecture**: Modular design with reusable components
 
 ## Future Improvements
 
-The next feature to add would be synchronization with a Shopify customer account. This would allow:
-
-- Wishlist persistence across devices
-- Sharing wishlists with friends
-- Email notifications when wishlist items go on sale
-- Integration with Shopify's customer accounts and login system
-
-This would require setting up a proper database to store user wishlists and integrating with Shopify's authentication system.
+1. **Customer Account Integration**: Synchronize wishlist with Shopify customer accounts
+2. **Product Variants**: Add support for selecting product variants (size, color, etc.)
+3. **Quantity Control**: Allow users to specify quantities for cart items
+4. **Wishlist Sharing**: Enable users to share their wishlists via email or social media
+5. **Stock Status**: Show when items are low in stock or unavailable
+6. **Recently Viewed**: Track and display recently viewed products
+7. **Performance Optimization**: Implement lazy loading for product images
+8. **Analytics**: Add tracking to monitor wishlist conversion rates
 
 ## Technologies Used
 
@@ -60,4 +72,4 @@ This would require setting up a proper database to store user wishlists and inte
 - Tailwind CSS
 - React Router
 - shadcn/ui for UI components
-
+- Lucide Icons

@@ -13,9 +13,12 @@ export interface Product {
 interface ProductsContextType {
   products: Product[];
   wishlist: Product[];
+  cart: Product[];
   addToWishlist: (product: Product) => void;
   removeFromWishlist: (productId: string) => void;
   isInWishlist: (productId: string) => boolean;
+  addToCart: (product: Product) => void;
+  removeFromCart: (productId: string) => void;
   moveToCart: (productId: string) => void;
 }
 
@@ -24,6 +27,7 @@ const ProductsContext = createContext<ProductsContextType | undefined>(undefined
 export const ProductsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [products] = useState<Product[]>(dummyProducts);
   const [wishlist, setWishlist] = useState<Product[]>([]);
+  const [cart, setCart] = useState<Product[]>([]);
 
   // Load wishlist from cookies on initial render
   useEffect(() => {
@@ -40,6 +44,21 @@ export const ProductsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         console.error("Error parsing wishlist from cookies:", error);
       }
     }
+
+    // Load cart from cookies
+    const savedCart = document.cookie
+      .split("; ")
+      .find(row => row.startsWith("cart="));
+    
+    if (savedCart) {
+      try {
+        const cartIds = JSON.parse(decodeURIComponent(savedCart.split("=")[1]));
+        const savedCartProducts = products.filter(product => cartIds.includes(product.id));
+        setCart(savedCartProducts);
+      } catch (error) {
+        console.error("Error parsing cart from cookies:", error);
+      }
+    }
   }, [products]);
 
   // Save wishlist to cookies whenever it changes
@@ -47,6 +66,12 @@ export const ProductsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     const wishlistIds = wishlist.map(item => item.id);
     document.cookie = `wishlist=${encodeURIComponent(JSON.stringify(wishlistIds))}; path=/; max-age=604800; SameSite=Lax`;
   }, [wishlist]);
+
+  // Save cart to cookies whenever it changes
+  useEffect(() => {
+    const cartIds = cart.map(item => item.id);
+    document.cookie = `cart=${encodeURIComponent(JSON.stringify(cartIds))}; path=/; max-age=604800; SameSite=Lax`;
+  }, [cart]);
 
   const addToWishlist = (product: Product) => {
     setWishlist(prev => {
@@ -65,17 +90,40 @@ export const ProductsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     return wishlist.some(item => item.id === productId);
   };
 
+  const addToCart = (product: Product) => {
+    setCart(prev => {
+      if (!prev.some(item => item.id === product.id)) {
+        return [...prev, product];
+      }
+      return prev;
+    });
+  };
+
+  const removeFromCart = (productId: string) => {
+    setCart(prev => prev.filter(item => item.id !== productId));
+  };
+
   const moveToCart = (productId: string) => {
-    // In a real app, this would add the item to the cart
-    // For this demo, we'll just remove it from the wishlist
-    console.log(`Moving product ${productId} to cart`);
-    removeFromWishlist(productId);
-    alert(`Product moved to cart!`);
+    const product = wishlist.find(item => item.id === productId);
+    if (product) {
+      addToCart(product);
+      removeFromWishlist(productId);
+    }
   };
 
   return (
     <ProductsContext.Provider 
-      value={{ products, wishlist, addToWishlist, removeFromWishlist, isInWishlist, moveToCart }}
+      value={{ 
+        products, 
+        wishlist, 
+        cart, 
+        addToWishlist, 
+        removeFromWishlist, 
+        isInWishlist, 
+        addToCart, 
+        removeFromCart, 
+        moveToCart 
+      }}
     >
       {children}
     </ProductsContext.Provider>
