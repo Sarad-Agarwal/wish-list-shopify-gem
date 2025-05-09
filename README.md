@@ -1,73 +1,63 @@
-# Welcome to your Lovable project
 
-## Project info
+# Shopify Wishlist App
 
-**URL**: https://lovable.dev/projects/4ba75373-887f-4870-98f2-4badbc90bdf0
+A minimal embedded Shopify app that adds a "Save for Later / Wishlist" feature to a storefront. Built with React and designed to integrate with Shopify using the Remix template.
 
-## How can I edit this code?
+## Features
 
-There are several ways of editing your application.
+- Browse and view products
+- Save products to a wishlist for later
+- View all saved products in the wishlist page
+- Remove products from the wishlist
+- Move products from wishlist to cart
 
-**Use Lovable**
+## Setup Steps
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/4ba75373-887f-4870-98f2-4badbc90bdf0) and start prompting.
+1. Clone the repository:
+   ```bash
+   git clone <repository-url>
+   cd shopify-wishlist-app
+   ```
 
-Changes made via Lovable will be committed automatically to this repo.
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-**Use your preferred IDE**
+3. Start the development server:
+   ```bash
+   npm run dev
+   ```
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+4. Open your browser and navigate to `http://localhost:8080`
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+## How Wishlist Persistence Works
 
-Follow these steps:
+This app uses session cookies to persist the wishlist state across routes. When a user adds a product to their wishlist:
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+1. The product ID is stored in a cookie named "wishlist"
+2. This cookie is set with a 7-day expiration (max-age=604800)
+3. The cookie is read on initial page load to restore the wishlist state
+4. When products are removed from the wishlist, the cookie is updated accordingly
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+This approach ensures that users' wishlists persist even if they close their browser and return later, providing a seamless shopping experience.
 
-# Step 3: Install the necessary dependencies.
-npm i
+## Future Improvements
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+The next feature to add would be synchronization with a Shopify customer account. This would allow:
 
-**Edit a file directly in GitHub**
+- Wishlist persistence across devices
+- Sharing wishlists with friends
+- Email notifications when wishlist items go on sale
+- Integration with Shopify's customer accounts and login system
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+This would require setting up a proper database to store user wishlists and integrating with Shopify's authentication system.
 
-**Use GitHub Codespaces**
+## Technologies Used
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
 - React
-- shadcn-ui
+- TypeScript
 - Tailwind CSS
+- React Router
+- shadcn/ui for UI components
 
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/4ba75373-887f-4870-98f2-4badbc90bdf0) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
